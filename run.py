@@ -86,19 +86,36 @@ def display_questions():
         while True:
             user_answer = input('Your answer: \n')
             if validate_input(user_answer, x):
+                check_answer(user_answer, correct_answer, answers)
                 break
-                # check_answer(user_answer)
-        x += 1
 
-# def check_answer(answer):
-    # print('checking answer...')
+        x += 1
+    print('game over\n')
+
+def check_answer(input_ans, correct_ans, ans_list):
+    input_ans = int(input_ans)
+    print('checking answer...\n')
+    print(f'input_ans {type(input_ans)}')
+    print(f'correc_ans {correct_ans}')
+    print(f'ans_list {ans_list}')
+    global SCORE
+    ans_index = ans_list.index(correct_ans) + 1
+    print(f'ans_index {ans_index}')
+    if input_ans == ans_index:
+        print('Correct!\n')
+        SCORE += 1
+    else:
+        print("Sorry, that's not right\n")
+
+
+
+
 
 def validate_input(ans, index):
     """
     Validate user input to be a number 1-4 or
     1-2 if answer is boolean.
     """
-    print('validating user input...')
     ans_type = QUESTIONS[index]['type']
     ans_range = 4
     if ans_type == 'multiple':
@@ -109,17 +126,16 @@ def validate_input(ans, index):
     try:
         ans = int(ans)
         if not (1 <= ans <= ans_range):
-            print('if working.....')
             raise ValueError(
-                f"Expected an input of '1 - {ans_range}', but got '{ans}'. Please try again."
+                f"Expected an input of '1 - {ans_range}', but got '{ans}'."
             )    
     except ValueError as e:
-        print(f"Invalid data: {e}, please try again.\n")
+        print(f"Invalid data: {e}. Please try again.\n")
         return False
 
 
     return True
 
 
-get_questions(10, 9, DIFFICULTY)
+get_questions(3, 9, DIFFICULTY)
 display_questions()
