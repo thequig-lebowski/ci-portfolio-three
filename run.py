@@ -71,7 +71,7 @@ def display_questions():
 
         this_question = question['question']
         rprint(f'[bold bright_cyan]Qusetion {x+1}: ')
-        print(unescape(this_question), '\n')
+        print(textwrap.dedent(unescape(this_question)), '\n')
 
         incorrect_answers = question['incorrect_answers']
         correct_answer = question['correct_answer']
@@ -193,21 +193,51 @@ def start_up():
     test your knowledge across several different categories 
     and difficulties.\n'''))
     time.sleep(1.5)
-    category = category_select()
+    (category, cat_index) = category_select()
     rprint(f'You have selected [bold purple]{category}.')
     time.sleep(1.5)
+    difficulty = difficulty_select()
+    rprint(f'You have selected [bold purple]{difficulty}.')
+    time.sleep(1.5)
+    category = convert_selection(cat_index)
+
+    return (category, difficulty)
+
+
+def difficulty_select():
+    """
+    Do stuff
+    """
+    diff_options = ['easy', 'medium', 'hard']
+    print('Please choose a difficulty level from the list below:\n')
+    difficulty_menu = TerminalMenu(diff_options)
+    diff_selection = difficulty_menu.show()
+    return diff_options[diff_selection]
 
 
 def category_select():
+    """
+    Do stuff
+    """
     cat_options = [
         'General Knowledge', 'Literature', 'Film', 'Music', 
         'Television', 'Sports', 'Geography', 'History' 
     ]
     print('Please choose a category of questions from the list below:\n')
-    terminal_menu = TerminalMenu(cat_options)
-    menu_selection = terminal_menu.show()
+    category_menu = TerminalMenu(cat_options)
+    cat_selection = category_menu.show()
     # print(f'You have selected {cat_options[menu_selection]}')
-    return cat_options[menu_selection]
+    return (cat_options[cat_selection], cat_selection)
+
+
+def convert_selection(selection):
+    """
+    Do stuff
+    """
+    api_categories = [9, 10, 11, 12, 14, 21, 22, 23]
+    return api_categories[selection]
+
+
 
 
 def validate_input(category, difficulty):
@@ -221,8 +251,8 @@ def main():
     """
     List of functions to run on programme launch
     """
-    start_up()
-    get_questions(10, 9, DIFFICULTY)
+    (a, b) = start_up()
+    get_questions(10, a, b)
     display_questions()
 
 
