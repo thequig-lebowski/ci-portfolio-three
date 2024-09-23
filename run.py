@@ -17,7 +17,7 @@ USERNAME = ''
 SCORE = 0
 CATEGORY = 12
 DIFFICULTY = 'hard'
-
+CREDS = creds.api_key
 
 def clr_terminal():
     """
@@ -34,9 +34,9 @@ def get_questions(amount, category, difficulty):
     time.sleep(1)
 
     url = f"""https://trivia-questions-api.p.rapidapi.com/triviaApi?amount={amount}&category={category}&difficulty={difficulty}"""
-    # url = ''
+    
     headers = {
-        "x-rapidapi-key": creds.api_key,
+        "x-rapidapi-key": CREDS,
         "x-rapidapi-host": "trivia-questions-api.p.rapidapi.com"
     }
 
