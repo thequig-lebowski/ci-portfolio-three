@@ -29,3 +29,7 @@ def category_select():
     cat_selection = category_menu.show()
     rprint(f'You have selected [bold purple]{cat_options[cat_selection]}')
     return (cat_options[cat_selection], cat_selection)
+
+    https://stackoverflow.com/questions/24518944/try-except-when-using-python-requests-module
+
+    

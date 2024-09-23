@@ -35,13 +35,19 @@ def get_questions(amount, category, difficulty):
     time.sleep(1)
 
     url = f"""https://trivia-questions-api.p.rapidapi.com/triviaApi?amount={amount}&category={category}&difficulty={difficulty}"""
-
+    # url = ''
     headers = {
         "x-rapidapi-key": creds.api_key,
         "x-rapidapi-host": "trivia-questions-api.p.rapidapi.com"
     }
 
     response = requests.get(url, headers=headers)
+    
+    try:
+        response.raise_for_status()
+    except requests.exceptions.HTTPError as e:
+        return "Error: " + str(e)
+
     # convert response object to python dict
     global QUESTIONS
     QUESTIONS = response.json()
@@ -205,19 +211,7 @@ def round_over():
     user_input = TerminalMenu(replay)
     input_index = user_input.show()
     action = replay[input_index]
-    # replay = [
-    #     'entry 1',
-    #     'entry 2',
-    #     '',
-    #     'entry 3'
-    #     ]
-    # terminal_menu = TerminalMenu(replay)
-    # menu_entry_index = terminal_menu.show()
-    # print(f"You have selected {replay[menu_entry_index]}!")
-
-    print(action)
-
-    
+    print(action)  
 
 
 def validate_answer(ans, index):
@@ -318,7 +312,7 @@ def main():
     global CATEGORY
     global DIFFICULTY
     (CATEGORY, DIFFICULTY) = start_up()
-    get_questions(1, CATEGORY, DIFFICULTY)
+    get_questions(10, CATEGORY, DIFFICULTY)
     display_questions()
 
 
