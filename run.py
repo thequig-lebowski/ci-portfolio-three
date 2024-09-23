@@ -1,6 +1,5 @@
 import json
 import requests
-from pprint import pprint
 import creds
 from html import unescape
 import random
@@ -55,7 +54,7 @@ def get_questions(amount, category, difficulty):
     print('amount type is:', type(amount))
     print('QUESTIONS type is:', type(QUESTIONS))
     print('QUESTIONS length is:', len(QUESTIONS))
-    pprint(QUESTIONS, depth=5)
+    # pprint(QUESTIONS, depth=5)
     # i = 1
     # this_question = QUESTIONS[i]['question']
     # correct_answer = QUESTIONS[i]['correct_answer']
