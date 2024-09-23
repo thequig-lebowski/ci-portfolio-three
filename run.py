@@ -1,6 +1,5 @@
 import json
 import requests
-import creds
 from html import unescape
 import random
 import textwrap
@@ -8,7 +7,7 @@ from rich import print as rprint
 import os
 import time
 from simple_term_menu import TerminalMenu
-from google.oauth2.service_account import Credentials
+from dotenv import load_dotenv
 
 # import sample_data
 
@@ -19,6 +18,10 @@ SCORE = 0
 CATEGORY = 12
 DIFFICULTY = 'hard'
 # CREDS = creds.api_key
+
+def configure():
+    load_dotenv()
+
 
 def clr_terminal():
     """
@@ -37,7 +40,7 @@ def get_questions(amount, category, difficulty):
     url = f"""https://trivia-questions-api.p.rapidapi.com/triviaApi?amount={amount}&category={category}&difficulty={difficulty}"""
     
     headers = {
-        "x-rapidapi-key": creds.api_key,
+        "x-rapidapi-key": os.getenv('api_key'),
         "x-rapidapi-host": "trivia-questions-api.p.rapidapi.com"
     }
 
@@ -309,6 +312,7 @@ def main():
     """
     List of functions to run on programme launch
     """
+    configure()
     global CATEGORY
     global DIFFICULTY
     (CATEGORY, DIFFICULTY) = start_up()
