@@ -3,7 +3,7 @@ import requests
 from html import unescape
 import random
 import textwrap
-from rich import print as rprint
+from rich import print
 import os
 import time
 from simple_term_menu import TerminalMenu
@@ -81,7 +81,7 @@ def display_questions():
     for question in QUESTIONS:
 
         this_question = question['question']
-        rprint(f'[bold bright_cyan]Qusetion {x+1}: ')
+        print(f'[bold bright_cyan]Qusetion {x+1}: ')
         print(textwrap.fill(textwrap.dedent(unescape(this_question))), '\n')
         
         incorrect_answers = question['incorrect_answers']
@@ -166,10 +166,10 @@ def check_answer(input_ans, correct_ans):
     """
     global SCORE
     if input_ans == correct_ans:
-        rprint('[bold green]Correct!\n')
+        print('[bold green]Correct!\n')
         SCORE += 1
     else:
-        rprint("[bold red]Sorry, that's not right\n")
+        print("[bold red]Sorry, that's not right\n")
     time.sleep(1.5)
     clr_terminal()
 
@@ -184,19 +184,19 @@ def round_over():
     global SCORE
     match SCORE:
         case 0:
-            rprint('You didn\'t manage to get any questions right.')
+            print('You didn\'t manage to get any questions right.')
         case SCORE if SCORE < 3:
-            rprint(f'Not bad, you got [bold purple]{SCORE}[/bold purple] right answers.')
+            print(f'Not bad, you got [bold purple]{SCORE}[/bold purple] right answers.')
         case SCORE if SCORE < 6:
-            rprint(f'Well done, you were able to get [bold purple]{SCORE}[/bold purple] questions right.')
+            print(f'Well done, you were able to get [bold purple]{SCORE}[/bold purple] questions right.')
         case SCORE if SCORE < 9:
-            rprint(f'Great job, you scored [bold purple]{SCORE}[/bold purple] out of 10.')
+            print(f'Great job, you scored [bold purple]{SCORE}[/bold purple] out of 10.')
         case SCORE if SCORE < 10:
-            rprint(textwrap.fill(textwrap.dedent(f'''
+            print(textwrap.fill(textwrap.dedent(f'''
             You got [bold purple]{SCORE}[/bold purple] questions
              right, nearly a perfect score. Well done!\n''')))
         case 10:
-            rprint(textwrap.fill(textwrap.dedent('''
+            print(textwrap.fill(textwrap.dedent('''
             CONGRATULATIONS! You scored a perfect round
             of [bold purple]10/10.[/bold purple] Well done.\n''')))
     # check leader board
@@ -247,17 +247,17 @@ def start_up():
     set game difficulty.
     """
     print('\n')
-    rprint('Welcome to "LET\'S GET QUIZICAL"\n')
-    rprint(textwrap.dedent('''
+    print('Welcome to "LET\'S GET QUIZICAL"\n')
+    print(textwrap.dedent('''
     This is a text-based quuiz game where you can 
     test your knowledge across several different categories 
     and difficulties.\n'''))
     time.sleep(1.5)
     (category, cat_index) = category_select()
-    # rprint(f'You have selected [bold purple]{category}.')
+    # print(f'You have selected [bold purple]{category}.')
     time.sleep(1.5)
     difficulty = difficulty_select()
-    # rprint(f'You have selected [bold purple]{difficulty}.')
+    # print(f'You have selected [bold purple]{difficulty}.')
     difficulty = difficulty.lower()
     time.sleep(1.5)
     category = convert_selection(cat_index)
@@ -273,7 +273,7 @@ def difficulty_select():
     print('Please choose a difficulty level from the list below:\n')
     difficulty_menu = TerminalMenu(diff_options)
     diff_selection = difficulty_menu.show()
-    rprint(f'You have selected [bold purple]{diff_options[diff_selection]}')
+    print(f'You have selected [bold purple]{diff_options[diff_selection]}')
     return diff_options[diff_selection]
 
 
@@ -288,7 +288,7 @@ def category_select():
     print('Please choose a category of questions from the list below:\n')
     category_menu = TerminalMenu(cat_options)
     cat_selection = category_menu.show()
-    rprint(f'You have selected [bold purple]{cat_options[cat_selection]}')
+    print(f'You have selected [bold purple]{cat_options[cat_selection]}')
     return (cat_options[cat_selection], cat_selection)
 
 
