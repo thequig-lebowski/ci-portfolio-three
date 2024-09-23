@@ -5,7 +5,9 @@ import creds
 from html import unescape
 import random
 import textwrap
-from rich import print
+from rich import print as rprint
+import os
+import time
 # import sample_data
 
 # Global Variables
@@ -15,12 +17,18 @@ SCORE = 0
 DIFFICULTY = 'easy'
 
 
+def clr_terminal():
+    """
+    Function to clear text from terminal
+    """
+    os.system('cls' if os.name == 'nt' else 'clear')
+
 def get_questions(amount, category, difficulty):
     """
     Function to get a set of questions from the Trivia Questions API.
     It stores the the list of 10 Q's in a variable to be called later
     """
-    print('fetching questions...\n')
+    print('Loading questions...\n')
 
     url = f"""https://trivia-questions-api.p.rapidapi.com/triviaApi?
     amount={amount}&category={category}&difficulty={difficulty}"""
@@ -54,12 +62,13 @@ def display_questions():
     Display the questions, one at a time with the multiply choice
     answers below and take the users answer to be checked
     """
-    print('printing questions...\n')
+    clr_terminal()
+    # print('printing questions...\n')
     x = 0
     for question in QUESTIONS:
 
         this_question = question['question']
-        print(f'Qusetion {x+1}: ')
+        rprint(f'[bold bright_cyan]Qusetion {x+1}: ')
         print(unescape(this_question), '\n')
 
         incorrect_answers = question['incorrect_answers']
@@ -75,10 +84,13 @@ def display_questions():
         else:
             answers.sort(reverse=True)
 
+        time.sleep(1.5)
         display_answer_options(answers)
+        TEMPANSWER = answers.index(correct_answer) + 1 #delete this
 
         while True:
-            user_answer = input('Your answer: \n')
+            # user_answer = input('Your answer: \n')
+            user_answer = TEMPANSWER # delete this
             if validate_answer(user_answer, x):
                 check_answer(user_answer, correct_answer, answers)
                 break
@@ -94,9 +106,10 @@ def display_answer_options(answers):
     answer_number = 1
     for answer in answers:
         # remove unwanted spaces
-        answer.strip()
+        answer = answer.strip()
         print(unescape(f'No.{answer_number} {answer}'))
         answer_number += 1
+        time.sleep(.2)
     print('\n')
 
 
@@ -105,10 +118,12 @@ def check_answer(input_ans, correct_ans, ans_list):
     global SCORE
     ans_index = ans_list.index(correct_ans) + 1
     if input_ans == ans_index:
-        print('Correct!\n')
+        rprint('[bold green]Correct!\n')
         SCORE += 1
     else:
-        print("Sorry, that's not right\n")
+        rprint("[bold red]Sorry, that's not right\n")
+    time.sleep(1.5)
+    clr_terminal()
 
 
 def game_over():
@@ -121,19 +136,21 @@ def game_over():
     global SCORE
     match SCORE:
         case 0:
-            print('You didn\'t manage to get any questions right.')
+            rprint('You didn\'t manage to get any questions right.')
         case SCORE if SCORE < 3:
-            print(f'Not bad, you got {SCORE} right answers.')
+            rprint(f'Not bad, you got [bold purple]{SCORE}[/bold purple] right answers.')
         case SCORE if SCORE < 6:
-            print(f'Well done, you were able to get {SCORE} questions right.')
+            rprint(f'Well done, you were able to get [bold purple]{SCORE}[/bold purple] questions right.')
         case SCORE if SCORE < 9:
-            print(f'Great job, you scored {SCORE} out of 10.')
+            rprint(f'Great job, you scored [bold purple]{SCORE}[/bold purple] out of 10.')
         case SCORE if SCORE < 10:
-            print(textwrap.dedent(f'''You got {SCORE} questions
+            rprint(textwrap.dedent(f'''
+            You got [bold purple]{SCORE}[/bold purple] questions
              right, nearly a perfect score. Well done!'''))
         case 10:
-            print(textwrap.dedent('''CONGRATULATIONS! You scored
-            a perfect round of 10/10. Well done.'''))
+            rprint(textwrap.dedent('''
+            CONGRATULATIONS! You scored a perfect round
+            of [bold purple]10/10.[/bold purple]Well done.'''))
     # check leader board
     print('game over\n')
 
@@ -168,11 +185,12 @@ def start_up():
     set game difficulty.
     """
     print('\n')
-    print('Welcome to "LET\'S GET QUIZICAL"\n')
-    print(textwrap.dedent('''
+    rprint('Welcome to "LET\'S GET QUIZICAL"\n')
+    rprint(textwrap.dedent('''
     This is a text-based quuiz game where you can 
     test your knowledge across several different categories 
     in either \'easy\', \'medium\' or \'hard\' mode.'''))
+    time.sleep(3)
 
 
 def validate_input(category, difficulty):
