@@ -8,6 +8,8 @@ import textwrap
 from rich import print as rprint
 import os
 import time
+from simple_term_menu import TerminalMenu
+
 # import sample_data
 
 # Global Variables
@@ -189,8 +191,23 @@ def start_up():
     rprint(textwrap.dedent('''
     This is a text-based quuiz game where you can 
     test your knowledge across several different categories 
-    in either \'easy\', \'medium\' or \'hard\' mode.'''))
-    time.sleep(3)
+    and difficulties.\n'''))
+    time.sleep(1.5)
+    category = category_select()
+    rprint(f'You have selected [bold purple]{category}.')
+    time.sleep(1.5)
+
+
+def category_select():
+    cat_options = [
+        'General Knowledge', 'Literature', 'Film', 'Music', 
+        'Television', 'Sports', 'Geography', 'History' 
+    ]
+    print('Please choose a category of questions from the list below:\n')
+    terminal_menu = TerminalMenu(cat_options)
+    menu_selection = terminal_menu.show()
+    # print(f'You have selected {cat_options[menu_selection]}')
+    return cat_options[menu_selection]
 
 
 def validate_input(category, difficulty):
