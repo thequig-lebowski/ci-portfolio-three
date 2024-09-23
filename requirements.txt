@@ -5,6 +5,11 @@ gspread==6.1.2
 oauthlib==3.2.2
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
+python-dotenv==1.0.1
 requests-oauthlib==2.0.0
 rsa==4.9
 simple-term-menu==1.6.4
+alabaster==1.0.0
+Sphinx==7.3.7
+sphinx-rtd-theme==2.0.0
+sphinx-copybutton==0.5.1
