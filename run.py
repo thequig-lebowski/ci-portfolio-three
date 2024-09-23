@@ -8,6 +8,7 @@ from rich import print as rprint
 import os
 import time
 from simple_term_menu import TerminalMenu
+from google.oauth2.service_account import Credentials
 
 # import sample_data
 
@@ -17,7 +18,7 @@ USERNAME = ''
 SCORE = 0
 CATEGORY = 12
 DIFFICULTY = 'hard'
-CREDS = creds.api_key
+# CREDS = creds.api_key
 
 def clr_terminal():
     """
@@ -36,7 +37,7 @@ def get_questions(amount, category, difficulty):
     url = f"""https://trivia-questions-api.p.rapidapi.com/triviaApi?amount={amount}&category={category}&difficulty={difficulty}"""
     
     headers = {
-        "x-rapidapi-key": CREDS,
+        "x-rapidapi-key": creds.api_key,
         "x-rapidapi-host": "trivia-questions-api.p.rapidapi.com"
     }
 
