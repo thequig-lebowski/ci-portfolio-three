@@ -72,8 +72,9 @@ def display_questions():
     for question in QUESTIONS:
 
         this_question = question['question']
-        print(f'[bold bright_cyan]Qusetion {x+1}: \n')
-        print(textwrap.fill(textwrap.dedent(unescape(this_question))), '\n')
+        this_question = format_data(this_question)
+        print(f'[bold bright_cyan]Qusetion {x+1}:[/bold bright_cyan]           [bold yellow1]Score {SCORE}/{x+1}\n')
+        print(textwrap.fill(textwrap.dedent(this_question)), '\n')
 
         incorrect_answers = question['incorrect_answers']
         correct_answer = question['correct_answer']
@@ -229,7 +230,7 @@ def start_up():
     print('\n')
     print('Welcome to "LET\'S GET QUIZICAL"\n')
     print(textwrap.dedent('''
-    This is a text-based quuiz game where you can
+    This is a text-based quiz game where you can
     test your knowledge across several different categories
     and difficulties.\n'''))
     time.sleep(1.5)
