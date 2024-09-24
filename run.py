@@ -8,16 +8,16 @@ import os
 import time
 from simple_term_menu import TerminalMenu
 from dotenv import load_dotenv
+import sys
 
 # import sample_data
 
 # Global Variables
 QUESTIONS = []
-USERNAME = ''
 SCORE = 0
 CATEGORY = 12
 DIFFICULTY = 'hard'
-# CREDS = creds.api_key
+
 
 def configure():
     load_dotenv()
@@ -29,6 +29,7 @@ def clr_terminal():
     """
     os.system('cls' if os.name == 'nt' else 'clear')
 
+
 def get_questions(amount, category, difficulty):
     """
     Function to get a set of questions from the Trivia Questions API.
@@ -37,15 +38,15 @@ def get_questions(amount, category, difficulty):
     print(f'Loading {amount} questions...\n')
     time.sleep(1)
 
-    url = f"""https://trivia-questions-api.p.rapidapi.com/triviaApi?amount={amount}&category={category}&difficulty={difficulty}"""
-    
+    url = f"https://trivia-questions-api.p.rapidapi.com/triviaApi?amount={amount}&category={category}&difficulty={difficulty}"  # nopep8
+
     headers = {
         "x-rapidapi-key": os.getenv('api_key'),
         "x-rapidapi-host": "trivia-questions-api.p.rapidapi.com"
     }
 
     response = requests.get(url, headers=headers)
-    
+
     try:
         response.raise_for_status()
     except requests.exceptions.HTTPError as e:
@@ -55,19 +56,11 @@ def get_questions(amount, category, difficulty):
     global QUESTIONS
     QUESTIONS = response.json()
     QUESTIONS = QUESTIONS['triviaQuestions']
-    print('amount type is:', type(amount))
-    print('QUESTIONS type is:', type(QUESTIONS))
-    print('QUESTIONS length is:', len(QUESTIONS))
-    # pprint(QUESTIONS, depth=5)
-    # i = 1
-    # this_question = QUESTIONS[i]['question']
-    # correct_answer = QUESTIONS[i]['correct_answer']
-    # incorrect_answers_list = QUESTIONS[i]['incorrect_answers']
-    # print('number of questions: ', len(QUESTIONS))
-    # print(unescape(this_question))
-    # print(unescape(f'The correct answer is: {correct_answer}'))
-    # print(unescape(f'The wrong answers are: {incorrect_answers_list}'))
-    # return [this_question, correct_answer]
+    # print('amount type is:', type(amount))
+    # print('QUESTIONS type is:', type(QUESTIONS))
+    # print('QUESTIONS length is:', len(QUESTIONS))
+
+    display_questions()
 
 
 def display_questions():
@@ -76,28 +69,19 @@ def display_questions():
     answers below and take the users answer to be checked
     """
     clr_terminal()
-    # print('printing questions...\n')
     x = 0
     for question in QUESTIONS:
 
         this_question = question['question']
-        print(f'[bold bright_cyan]Qusetion {x+1}: ')
+        print(f'[bold bright_cyan]Qusetion {x+1}: \n')
         print(textwrap.fill(textwrap.dedent(unescape(this_question))), '\n')
         
         incorrect_answers = question['incorrect_answers']
         correct_answer = question['correct_answer']
         answers = incorrect_answers + [correct_answer]
 
-        print(correct_answer)
-
         correct_answer = format_data(correct_answer)
         answers = format_data(answers)
-        # remove white any white space from answers and
-        # unescape special characters
-        # for answer in answers:
-        #     answer_new = unescape(answer.strip())
-        #     answers[answers.index(answer)] = answer_new
-        # print(f'cheat ans is: {correct_answer}')
 
         # shuffle answers if more than two options
         # otherwise sort into reverse alphabetical order
@@ -110,18 +94,9 @@ def display_questions():
         time.sleep(1.5)
         user_answer = display_answer_options(answers)
         check_answer(user_answer, correct_answer)
-        #delete this
-        # TEMPANSWER = answers.index(correct_answer) + 1
 
-        # while True:
-        #     user_answer = input('Your answer: \n')
-        #     # delete this
-        #     # user_answer = TEMPANSWER
-        #     if validate_answer(user_answer, x):
-        #         check_answer(user_answer, correct_answer, answers)
-        #         break
-        
         x += 1
+
     round_over()
 
 
@@ -139,14 +114,13 @@ def format_data(data):
     return data
 
 
-
 def display_answer_options(answers):
     """
     Print answers with numbered indexing.
     """
     answer_menu = TerminalMenu(answers)
     answer_selection = answer_menu.show()
-    print(f'you have selected {answers[answer_selection]}')
+    print(f'You have selected {answers[answer_selection]}\n')
     return answers[answer_selection]
 
     # answer_number = 1
@@ -192,29 +166,39 @@ def round_over():
         case SCORE if SCORE < 9:
             print(f'Great job, you scored [bold purple]{SCORE}[/bold purple] out of 10.')
         case SCORE if SCORE < 10:
-            print(textwrap.fill(textwrap.dedent(f'''
-            You got [bold purple]{SCORE}[/bold purple] questions
-             right, nearly a perfect score. Well done!\n''')))
+            print(f'You got [bold purple]{SCORE}[/bold purple] questions right, nearly a perfect score. Well done!\n')
         case 10:
-            print(textwrap.fill(textwrap.dedent('''
-            CONGRATULATIONS! You scored a perfect round
-            of [bold purple]10/10.[/bold purple] Well done.\n''')))
-    # check leader board
+            print('CONGRATULATIONS! You scored a perfect round of [bold purple]10/10.[/bold purple] Well done.\n')
 
-    time.sleep(2)
+    time.sleep(4)
     clr_terminal()
+    SCORE = 0
+    replay_menu()
+    
 
+def replay_menu():
     print('What would you like to do?\n')
     replay = [
         'Replay this round',
         'Try another category',
-        'View leader board',
         'Exit'
         ]
     user_input = TerminalMenu(replay)
     input_index = user_input.show()
     action = replay[input_index]
-    print(action)  
+
+    match action:
+        case 'Replay this round':
+            get_questions(1, CATEGORY, DIFFICULTY)
+        case 'Try another category':
+            main()
+        case 'Exit':
+            exit_programme()
+
+
+def exit_programme():
+    print('Exiting programme...')
+    sys.exit(0)
 
 
 def validate_answer(ans, index):
@@ -249,10 +233,11 @@ def start_up():
     print('\n')
     print('Welcome to "LET\'S GET QUIZICAL"\n')
     print(textwrap.dedent('''
-    This is a text-based quuiz game where you can 
-    test your knowledge across several different categories 
+    This is a text-based quuiz game where you can
+    test your knowledge across several different categories
     and difficulties.\n'''))
     time.sleep(1.5)
+    print("Use the arrow keys to navigate, then press 'Enter' to select\n") 
     (category, cat_index) = category_select()
     # print(f'You have selected [bold purple]{category}.')
     time.sleep(1.5)
@@ -273,7 +258,7 @@ def difficulty_select():
     print('Please choose a difficulty level from the list below:\n')
     difficulty_menu = TerminalMenu(diff_options)
     diff_selection = difficulty_menu.show()
-    print(f'You have selected [bold purple]{diff_options[diff_selection]}')
+    print(f'You have selected [bold purple]{diff_options[diff_selection]}\n')
     return diff_options[diff_selection]
 
 
@@ -282,13 +267,19 @@ def category_select():
     Do stuff
     """
     cat_options = [
-        'General Knowledge', 'Literature', 'Film', 'Music', 
-        'Television', 'Sports', 'Geography', 'History' 
+        'General Knowledge',
+        'Literature',
+        'Film',
+        'Music',
+        'Television',
+        'Sports',
+        'Geography',
+        'History'
     ]
     print('Please choose a category of questions from the list below:\n')
     category_menu = TerminalMenu(cat_options)
     cat_selection = category_menu.show()
-    print(f'You have selected [bold purple]{cat_options[cat_selection]}')
+    print(f'You have selected [bold purple]{cat_options[cat_selection]}\n')
     return (cat_options[cat_selection], cat_selection)
 
 
@@ -307,7 +298,6 @@ def validate_input(category, difficulty):
     pass
 
 
-
 def main():
     """
     List of functions to run on programme launch
@@ -316,11 +306,7 @@ def main():
     global CATEGORY
     global DIFFICULTY
     (CATEGORY, DIFFICULTY) = start_up()
-    get_questions(10, CATEGORY, DIFFICULTY)
-    display_questions()
+    get_questions(1, CATEGORY, DIFFICULTY)
 
 
 main()
-
-
-
