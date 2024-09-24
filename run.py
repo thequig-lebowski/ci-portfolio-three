@@ -10,8 +10,6 @@ from simple_term_menu import TerminalMenu
 from dotenv import load_dotenv
 import sys
 
-# import sample_data
-
 # Global Variables
 QUESTIONS = []
 SCORE = 0
@@ -19,7 +17,11 @@ CATEGORY = 12
 DIFFICULTY = 'hard'
 
 
+# Functions
 def configure():
+    """
+    Sets up .env for api keys
+    """
     load_dotenv()
 
 
@@ -56,9 +58,6 @@ def get_questions(amount, category, difficulty):
     global QUESTIONS
     QUESTIONS = response.json()
     QUESTIONS = QUESTIONS['triviaQuestions']
-    # print('amount type is:', type(amount))
-    # print('QUESTIONS type is:', type(QUESTIONS))
-    # print('QUESTIONS length is:', len(QUESTIONS))
 
     display_questions()
 
@@ -75,7 +74,7 @@ def display_questions():
         this_question = question['question']
         print(f'[bold bright_cyan]Qusetion {x+1}: \n')
         print(textwrap.fill(textwrap.dedent(unescape(this_question))), '\n')
-        
+
         incorrect_answers = question['incorrect_answers']
         correct_answer = question['correct_answer']
         answers = incorrect_answers + [correct_answer]
@@ -122,14 +121,6 @@ def display_answer_options(answers):
     answer_selection = answer_menu.show()
     print(f'You have selected {answers[answer_selection]}\n')
     return answers[answer_selection]
-
-    # answer_number = 1
-    # for answer in answers:
-    #     # remove unwanted spaces
-    #     answer = answer.strip()
-    #     print(unescape(f'No.{answer_number} {answer}'))
-    #     answer_number += 1
-    #     time.sleep(.2)
     print('\n')
 
 
@@ -153,8 +144,6 @@ def round_over():
     Function to display score and further options;
     play again view leader board.
     """
-    # Use match/case statement to have dynamic congrats message
-    # depending on the amount scored.
     global SCORE
     match SCORE:
         case 0:
@@ -174,9 +163,13 @@ def round_over():
     clr_terminal()
     SCORE = 0
     replay_menu()
-    
+
 
 def replay_menu():
+    """
+    Asks the user what they would like to
+    do when they get to the end of a round.
+    """
     print('What would you like to do?\n')
     replay = [
         'Replay this round',
@@ -189,7 +182,7 @@ def replay_menu():
 
     match action:
         case 'Replay this round':
-            get_questions(1, CATEGORY, DIFFICULTY)
+            get_questions(10, CATEGORY, DIFFICULTY)
         case 'Try another category':
             main()
         case 'Exit':
@@ -197,6 +190,9 @@ def replay_menu():
 
 
 def exit_programme():
+    """
+    Exits the programme safely
+    """
     print('Exiting programme...')
     sys.exit(0)
 
@@ -237,12 +233,10 @@ def start_up():
     test your knowledge across several different categories
     and difficulties.\n'''))
     time.sleep(1.5)
-    print("Use the arrow keys to navigate, then press 'Enter' to select\n") 
+    print("Use the arrow keys to navigate, then press 'Enter' to select\n")
     (category, cat_index) = category_select()
-    # print(f'You have selected [bold purple]{category}.')
     time.sleep(1.5)
     difficulty = difficulty_select()
-    # print(f'You have selected [bold purple]{difficulty}.')
     difficulty = difficulty.lower()
     time.sleep(1.5)
     category = convert_selection(cat_index)
@@ -252,7 +246,8 @@ def start_up():
 
 def difficulty_select():
     """
-    Do stuff
+    Menu for the user to select the difficulty level
+    for that round
     """
     diff_options = ['Easy', 'Medium', 'Hard']
     print('Please choose a difficulty level from the list below:\n')
@@ -264,7 +259,7 @@ def difficulty_select():
 
 def category_select():
     """
-    Do stuff
+    Menu for the user to select the category for that level
     """
     cat_options = [
         'General Knowledge',
@@ -291,13 +286,6 @@ def convert_selection(selection):
     return api_categories[selection]
 
 
-def validate_input(category, difficulty):
-    """
-    Validate user selection of category and difficulty level
-    """
-    pass
-
-
 def main():
     """
     List of functions to run on programme launch
@@ -306,7 +294,7 @@ def main():
     global CATEGORY
     global DIFFICULTY
     (CATEGORY, DIFFICULTY) = start_up()
-    get_questions(1, CATEGORY, DIFFICULTY)
+    get_questions(10, CATEGORY, DIFFICULTY)
 
 
 main()
